@@ -35,13 +35,13 @@ export default class NotificationMessage {
 	 `;
   }
 
-  show(tag) {
-    if (tag) {
-      tag.append(this.element);
+  show(container = document.body) {
+    if (container) {
+      container.append(this.element);
     } else {
-      document.body.append(this.element) 
+      document.body.append(this.element); 
     }
-    setTimeout(()=> {this.remove()}, this.duration);
+    this.timerId = setTimeout(()=> {this.remove();}, this.duration);
   }
 
   remove() {
@@ -50,5 +50,6 @@ export default class NotificationMessage {
 
   destroy() {
     this.remove();
+    clearTimeout(this.timerId);
   }
 }
