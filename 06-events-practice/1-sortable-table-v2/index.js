@@ -11,6 +11,7 @@ export default class SortableTableV2 extends SortableTable {
     super(headersConfig, data);
     this.isSortLocally = true;
     this.sorted = sorted;
+
     this.arrowElement = this.createArrowElement(this.createArrowTemplate());
     this.createListeners();
     this.defaultSorting();
@@ -38,7 +39,7 @@ export default class SortableTableV2 extends SortableTable {
     }
   }
 
-  handleHeaderCellClick = (e) => {
+  handleHeaderCellClick(e) {
     const cellElement = e.target.closest('.sortable-table__cell');
 
     if (!cellElement) {
@@ -58,10 +59,12 @@ export default class SortableTableV2 extends SortableTable {
   }
 
   sort (sortField, sortOrder) {
+    this.sorted.id = sortField;
+    this.sorted.order = sortOrder;
     if (this.isSortLocally) {
       this.sortOnClient(sortField, sortOrder);
     } else {
-      this.sortOnServer();
+      this.sortOnServer(sortField, sortOrder);
     }
   }
 
@@ -73,7 +76,10 @@ export default class SortableTableV2 extends SortableTable {
     
   }
 
+
+
   createListeners() {
+    this.handleHeaderCellClick = this.handleHeaderCellClick.bind(this);
     this.subElements.header.addEventListener('pointerdown', this.handleHeaderCellClick);
   }
 
