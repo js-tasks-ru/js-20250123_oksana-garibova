@@ -28,6 +28,7 @@ export default class SortableTable {
     });
     
     this.subElements.body.innerHTML = this.createBodyElementTemplate(this.data);
+    this.update(this.data);
   }
   
   createElement(template) {
@@ -49,13 +50,13 @@ export default class SortableTable {
   createBodyElementTemplate(body) {
     return body.map(itemBody => {
       return `
-        <a href="/products/3d-ochki-epson-elpgs03" class="sortable-table__row">
-        ${this.headerConfig.map((itemHeader) => {
-    if (itemHeader.template) {
-      return itemHeader.template([itemBody]);
+        <a href="#" class="sortable-table__row">
+        ${this.headerConfig.map(({id, template}) => {
+    if (template) {
+      return `${template(itemBody[id])}`;
     }
     else {
-      return `<div class="sortable-table__cell">${itemBody[itemHeader.id]}</div>`;
+      return `<div class="sortable-table__cell">${itemBody[id]}</div>`;
     }
   }).join('')}	
 			</a>
@@ -74,8 +75,25 @@ export default class SortableTable {
 			<div data-element="body" class="sortable-table__body">
 				${this.createBodyElementTemplate(this.data)}
 			</div>
+
+			<div data-element="loading" class="loading-line sortable-table__loading-line"></div>
+
+			<div data-element="emptyPlaceholder" class="sortable-table__empty-placeholder">
+				<div>
+				<p>No products satisfies your filter criteria</p>
+				<button type="button" class="button-primary-outline">Reset all filters</button>
+				</div>
+			</div>
+
 		</div>
 	`;
+  }
+
+  update(newData) {
+    this.data = newData;
+    this.element.querySelector('[data-element="body"]').innerHTML = this.createBodyElementTemplate(this.data);
+	 debugger;
+	 /*this.subElements.body.innerHTML = this.createBodyElementTemplate(this.data);*/
   }
 
   remove() {
