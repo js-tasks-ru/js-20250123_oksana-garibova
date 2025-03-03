@@ -48,7 +48,6 @@ fetchData() {
   .then((data) => {
     //пустой массив
     const emptyPlaceholderElement = this.element.querySelector('[data-element=emptyPlaceholder]');
-    this.iteration += 1;
     this.data = [...data];
     if (!this.data || !this.data.length) {
       emptyPlaceholderElement.style.display = 'block';
@@ -65,8 +64,16 @@ fetchData() {
 }
 
 async render() {
-  await fetchJson(this.createUrl());
-  super.update(this.data);
+  try {
+    const url = this.createUrl();
+    const response = await fetchJson(url);
+    this.data = Object.values(response);
+    super.update(this.data);
+    return response;
+  }
+  catch (err) {
+    throw err;
+  }
 }
 
 sortOnServer(field, order) {
